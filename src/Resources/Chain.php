@@ -9,6 +9,7 @@ class Chain extends Resource
 {
     /**
      * Get chain list
+     *
      * @return mixed
      * @throws InvalidRequestMethodException
      */
