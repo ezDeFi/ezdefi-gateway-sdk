@@ -17,17 +17,4 @@ class Chain extends Resource
     {
         return $this->get('chain/list');
     }
-
-    /**
-     * Get chain detail
-     *
-     * @param  string  $keyword
-     *
-     * @return mixed
-     * @throws InvalidRequestMethodException
-     */
-    public function getChainDetail(string $keyword)
-    {
-        return $this->get('chain/show', ['keyword' => $keyword]);
-    }
 }

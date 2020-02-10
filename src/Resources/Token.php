@@ -31,6 +31,10 @@ class Token extends Resource
      */
     public function getTokenDetail(string $_id)
     {
+        if(empty($_id)) {
+            throw new InvalidArgumentException('TokenId is required');
+        }
+
         return $this->get('token/show/' . $_id);
     }
 

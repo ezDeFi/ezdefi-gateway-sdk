@@ -64,6 +64,16 @@ class TokenTest extends BaseResourceTestCase
         $this->assertEquals('foo', $actual);
     }
 
+    public function testGetTokenDetailWithEmptyId()
+    {
+        try {
+            $this->token->getTokenDetail('');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('TokenId is required', $e->getMessage());
+        }
+    }
+
     public function testGetTokenExchange()
     {
         $expected = 'foo';

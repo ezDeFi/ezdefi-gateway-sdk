@@ -29,18 +29,4 @@ class ChainTest extends BaseResourceTestCase
 
         $this->assertEquals($expected, $actual);
     }
-
-    public function testGetChainDetail()
-    {
-        $expected = 'foo';
-
-        $this->request->expects($this->once())
-                      ->method('sendRequest')
-                      ->with('GET', 'http://foo.bar/chain/show?keyword=bitcoin')
-                      ->willReturn($expected);
-
-        $actual = $this->chain->getChainDetail('bitcoin');
-
-        $this->assertEquals($expected, $actual);
-    }
 }

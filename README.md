@@ -4,78 +4,75 @@ Offical PHP SDK for interacting with ezDeFi API.
 
 ## Installation
 
-You can install the package using [Composer]() package manager. You can install it by running this command in your project root:
+This library uses [HTTPlug](http://httplug.io/) to decouple from any HTTP messaging client. This mean you're free to choose any [PSR-7 implementation](https://packagist.org/providers/psr/http-message-implementation) and [HTTP client](https://packagist.org/providers/php-http/client-implementation) you prefer.
+
+If you just want to get started quickly you should run the following command:
 
 ```sh
-composer require ezdefi/ezdefi-php
+composer require ezdefi/ezdefi-php php-http/curl-client nyholm/psr7
 ```
 
-This libray uses [HTTPlug]() as HTTP client. Therefore, you need to provide it with an adapters [in Packagist](https://packagist.org/providers/php-http/client-implementation)
+## Usage
 
-We also follow [PSR-7](https://www.php-fig.org/psr/psr-7/), [PSR-17](https://www.php-fig.org/psr/psr-17/) and [PSR-18](https://www.php-fig.org/psr/psr-18/) standards for HTTP messaging. So you need to install an HTTP client following those standard.
-
-## Client
-
-Initialize your client using your API key and base API url:
+To get started, you just need to create an instance of the client and use its method to get data you want.
 
 ```php
+require_once __DIR__ . '/vendor/autoload.php';
+
 use Ezdefi\Client;
 
-$client = new Client('your-api-key', 'base-url');
+$client = new Client('your-api-key');
 ```
 
 ## Payment
 
 ```php
-/** Create payment */
+/** Create new payment */
 $client->payment->createPayment([
     'uoid' => 1,
-    'to' => 'receive wallet address',
+    'to' => 'wallet_address',
     'value' => 1.00,
     'currency' => 'usd:btc',
     'callback' => 'http://foo.bar/callback',
     'amountId' => true
 ]);
 
-/** Get payment detail by uoid and merchantId(merchant side) or paymentid */
-$client->payment->getPaymentDetail([
-    'paymentid' => 'paymentid', // payment id, which received after created                           
-    'uoid' => 'uoid', // unique order id (merchant side)
-    'userid' => 'userid' // merchant id
-]);
+/** Get payment detail by paymentid */
+$client->payment->getPaymentDetail('payment_id');
 
 /** Get payment list */
 $client->payment->getPaymentList([
-    'skip' => 10, // skip first found payments(default 0)
-    'limit' => 15, // limit of searching result
-    'ucid' => 1, // unique customer id(merchant side)
-    'to' => 'wallet address', // received wallet address
-    'chain' => 'value', // chain keyword (_id, name, address ...)
-    'token' => 'btc', // token keyword (_id, name, address ...)
+    'skip' => 10,
+    'limit' => 15,
+    'ucid' => 1,
+    'to' => 'wallet_address',
+    'chain' => 'value',
+    'token' => 'btc',
     'status' => 'PENDING' // payment status. Available values : EXPIRED, PENDING, DONE
 ]);
 
 /** Get tx list of a payment */
-$client->payment->getPaymentTxList([
-    'paymentid' => 'paymentid',
-    'skip' => 10,
-    'limit' => 15,
-]);
+$client->payment->getPaymentTxList('payment_id');
 ```
 
 ## Token
 
 ```php
 /** Get token list */
-$client->token->getTokenList();
+$client->token->getTokenList([
+    'skip' => 5,
+    'limit' => 10,
+    'keyword' => 'b',
+    'sort' => 'name'
+]);
 
 /** Get token detail by ID */
-$client->token->getTokenDetail('_id');
+$client->token->getTokenDetail('token_id');
 
 /** Get exchange rate between fiat and token */
 $client->token->getTokenExchange('usd', 'btc');
 
-/** Get exchange rates in bulk */
+/** Get exchange rates */
 $client->token->getTokenExchanges(1.00, 'usd', ['btc', 'eth']);
 ```
 
@@ -84,9 +81,6 @@ $client->token->getTokenExchanges(1.00, 'usd', ['btc', 'eth']);
 ```php
 /** Get chain list */
 $client->chain->getChainList();
-
-/** Get chain detail by keyword */
-$client->chain->getChainDetail('keyword');
 ```
 
 ## Users
@@ -99,6 +93,6 @@ $client->user->getUserDetail();
 ## Transaction
 
 ```php
-/** Get transaction detail */
-$client->transaction->getTransactionDetail('transaction id');
+/** Get transaction detail by transaction id */
+$client->transaction->getTransactionDetail('transaction_id');
 ```
