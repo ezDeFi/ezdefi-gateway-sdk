@@ -98,7 +98,7 @@ class Resource
     {
         $headers['Accept'] ='application/json';
         $headers['Content-Type'] ='application/json';
-        $headers['api-key'] ='fake-api-key';
+        $headers['api-key'] = $this->client->getApiKey();
 
         return $headers;
     }
