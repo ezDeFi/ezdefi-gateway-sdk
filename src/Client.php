@@ -12,7 +12,7 @@ class Client
      *
      * @var string
      */
-    protected $baseUrl = 'http://merchant-api.ezdefi.com/api';
+    protected $baseUrl = 'https://merchant-api.ezdefi.com/api';
 
     /**
      * API Key
