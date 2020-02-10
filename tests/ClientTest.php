@@ -19,12 +19,14 @@ class ClientTest extends TestCase
         $this->client->setBaseUrl('http://foo.bar');
     }
 
-    public function testA()
+    public function testCreateInstanceWithEmptyApiKey()
     {
-        $client = new Client('781cec94-a4fe-4e1e-985b-e45287a39322');
-        $payments = $client->payment->getPaymentList();
-        var_dump($payments);
-        $this->assertTrue(true);
+        try {
+            new Client('', 'http://foo.bar');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('API key is required', $e->getMessage());
+        }
     }
 
     public function testGetResource()
