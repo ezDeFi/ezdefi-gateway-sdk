@@ -2,6 +2,7 @@
 
 namespace Ezdefi;
 
+use Ezdefi\Exceptions\InvalidArgumentException;
 use Ezdefi\Exceptions\InvalidResourceException;
 
 class Client
@@ -30,9 +31,23 @@ class Client
      *
      * @param  string  $apiKey
      * @param  string  $baseUrl
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(string $apiKey, string $baseUrl)
     {
+        if(empty($apiKey)) {
+            throw new InvalidArgumentException('API key is required');
+        }
+
+        if(empty($baseUrl)) {
+            throw new InvalidArgumentException('Base URL is required');
+        }
+
+        if(!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException('Base URL is not valid');
+        }
+
         $this->apiKey = $apiKey;
         $this->baseUrl = $baseUrl;
     }

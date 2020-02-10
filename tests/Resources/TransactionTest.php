@@ -2,6 +2,7 @@
 
 namespace Ezdefi\Tests\Resources;
 
+use Ezdefi\Exceptions\InvalidArgumentException;
 use Ezdefi\Resources\Transaction;
 
 class TransactionTest extends BaseResourceTestCase
@@ -15,7 +16,7 @@ class TransactionTest extends BaseResourceTestCase
         $this->transaction = new Transaction($this->client, $this->request);
     }
 
-    public function testGetUserDetail()
+    public function testGetTransactionDetail()
     {
         $expected = 'foo';
 
@@ -27,5 +28,15 @@ class TransactionTest extends BaseResourceTestCase
         $actual = $this->transaction->getTransactionDetail('transactionid');
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testGetTransactionDetailWithEmptyId()
+    {
+        try {
+            $this->transaction->getTransactionDetail('');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('TransactionId is required', $e->getMessage());
+        }
     }
 }

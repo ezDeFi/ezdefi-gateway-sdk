@@ -3,6 +3,7 @@
 namespace Ezdefi;
 
 use Ezdefi\Exceptions\InvalidRequestMethodException;
+use Psr\Http\Client\ClientExceptionInterface;
 
 class Resource
 {
@@ -70,14 +71,10 @@ class Resource
      *
      * @return mixed
      * @throws InvalidRequestMethodException
-     * @throws \Psr\Http\Client\ClientExceptionInterface
+     * @throws ClientExceptionInterface
      */
     public function call(string $method, string $endpoint, array $parameters = [], array $requestHeaders = [])
     {
-        if(!in_array($method, ['GET', 'POST', 'PUT', 'DELETE'])) {
-            throw new InvalidRequestMethodException('Wrong request method. Only supports GET, POST, PUT, DELETE');
-        }
-
         $headers = $this->addRequestHeaders($requestHeaders);
 
         $path = $this->buildPath($endpoint);

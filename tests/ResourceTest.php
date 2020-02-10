@@ -86,16 +86,6 @@ class ResourceTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testCallWithInvalidMethodThrowException()
-    {
-        try {
-            $this->resource->call('WRONG', '/', [], []);
-            $this->fail('Expected exception not thrown');
-        } catch (InvalidRequestMethodException $e) {
-            $this->assertEquals('Wrong request method. Only supports GET, POST, PUT, DELETE', $e->getMessage());
-        }
-    }
-
     public function testCallWithQueryParameters()
     {
         $headers = [

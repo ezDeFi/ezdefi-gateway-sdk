@@ -2,6 +2,7 @@
 
 namespace Ezdefi\Tests\Api;
 
+use Ezdefi\Exceptions\InvalidArgumentException;
 use Ezdefi\Tests\Resources\BaseResourceTestCase;
 use Ezdefi\Resources\Token;
 
@@ -77,6 +78,26 @@ class TokenTest extends BaseResourceTestCase
         $this->assertEquals('foo', $actual);
     }
 
+    public function testGetTokenExchangeWithEmptyFiat()
+    {
+        try {
+            $this->token->getTokenExchange('', 'btc');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('Fiat is required', $e->getMessage());
+        }
+    }
+
+    public function testGetTokenExchangeWithEmptyToken()
+    {
+        try {
+            $this->token->getTokenExchange('usd', '');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('Token is required', $e->getMessage());
+        }
+    }
+
     public function testGetTokenExchanges()
     {
         $expected = 'foo';
@@ -89,5 +110,35 @@ class TokenTest extends BaseResourceTestCase
         $actual = $this->token->getTokenExchanges('1.00', 'usd', ['btc', 'eth']);
 
         $this->assertEquals('foo', $actual);
+    }
+
+    public function testGetTokenExchangesWithEmptyAmount()
+    {
+        try {
+            $this->token->getTokenExchanges('', 'usd', ['btc', 'eth']);
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('Amount is required', $e->getMessage());
+        }
+    }
+
+    public function testGetTokenExchangesWithEmptyFromValue()
+    {
+        try {
+            $this->token->getTokenExchanges('1.00', '', ['btc', 'eth']);
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('Fiat is required', $e->getMessage());
+        }
+    }
+
+    public function testGetTokenExchangesWithEmptyToValue()
+    {
+        try {
+            $this->token->getTokenExchanges('1.00', 'usd', []);
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('Token list is required', $e->getMessage());
+        }
     }
 }

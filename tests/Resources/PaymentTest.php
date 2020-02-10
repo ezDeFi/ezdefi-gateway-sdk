@@ -2,6 +2,8 @@
 
 namespace Ezdefi\Tests\Resources;
 
+use Ezdefi\Exceptions\InvalidArgumentException;
+use Ezdefi\Exceptions\MissingArgumentException;
 use Ezdefi\Resources\Payment;
 
 class PaymentTest extends BaseResourceTestCase
@@ -52,36 +54,48 @@ class PaymentTest extends BaseResourceTestCase
     {
         $expected = 'foo';
 
-        $parameters = [
-            'paymentid' => 'fakeid'
-        ];
-
         $this->request->expects($this->once())
                       ->method('sendRequest')
                       ->with('GET', 'http://foo.bar/payment/get?paymentid=fakeid')
                       ->willReturn($expected);
 
-        $actual = $this->payment->getPaymentDetail($parameters);
+        $actual = $this->payment->getPaymentDetail('fakeid');
 
         $this->assertEquals('foo', $actual);
+    }
+
+    public function testGetPaymentDetailWithEmptyPaymentId()
+    {
+        try {
+            $this->payment->getPaymentDetail('');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('PaymentId is required', $e->getMessage());
+        }
     }
 
     public function testGetPaymentTxList()
     {
         $expected = 'foo';
 
-        $parameters = [
-            'paymentid' => 'fakeid'
-        ];
-
         $this->request->expects($this->once())
                       ->method('sendRequest')
                       ->with('GET', 'http://foo.bar/payment/list_tx?paymentid=fakeid')
                       ->willReturn($expected);
 
-        $actual = $this->payment->getPaymentTxList($parameters);
+        $actual = $this->payment->getPaymentTxList('fakeid');
 
         $this->assertEquals('foo', $actual);
+    }
+
+    public function testGetPaymentTxListWithEmptyPaymentId()
+    {
+        try {
+            $this->payment->getPaymentTxList('');
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidArgumentException $e) {
+            $this->assertEquals('PaymentId is required', $e->getMessage());
+        }
     }
 
     public function testCreatePayment()
@@ -103,5 +117,20 @@ class PaymentTest extends BaseResourceTestCase
         $actual = $this->payment->createPayment($parameters);
 
         $this->assertEquals('foo', $actual);
+    }
+
+    public function testCreatePaymentMissingRequiredFields()
+    {
+        $parameters = [
+            'value' => 1,
+            'currency' => 'usd:btc'
+        ];
+
+        try {
+            $this->payment->createPayment($parameters);
+            $this->fail('Expected exception not thrown');
+        } catch (MissingArgumentException $e) {
+            $this->assertEquals('Required parameters (uoid, to) are missing', $e->getMessage());
+        }
     }
 }

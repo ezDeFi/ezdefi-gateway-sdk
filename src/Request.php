@@ -2,6 +2,7 @@
 
 namespace Ezdefi;
 
+use Ezdefi\Exceptions\InvalidRequestMethodException;
 use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Discovery\Psr17FactoryDiscovery;
@@ -45,10 +46,15 @@ class Request
      * @param  array  $headers
      *
      * @return mixed
+     * @throws InvalidRequestMethodException
      * @throws ClientExceptionInterface
      */
     public function sendRequest(string $method, string $uri, $body = false, $headers = [])
     {
+        if(!in_array($method, ['GET', 'POST', 'PUT', 'DELETE'])) {
+            throw new InvalidRequestMethodException('Wrong request method. Only supports GET, POST, PUT, DELETE');
+        }
+
         $response = $this->getHttpClient()->sendRequest(
             $this->createRequest($method, $uri, $body, $headers)
         );

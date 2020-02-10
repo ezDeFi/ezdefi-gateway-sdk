@@ -2,6 +2,8 @@
 
 namespace Ezdefi\Resources;
 
+use Ezdefi\Exceptions\InvalidArgumentException;
+use Ezdefi\Exceptions\MissingArgumentException;
 use Ezdefi\Resource;
 use Ezdefi\Exceptions\InvalidRequestMethodException;
 
@@ -26,10 +28,19 @@ class Payment extends Resource
      * @param  array  $parameters
      *
      * @return mixed
+     * @throws InvalidArgumentException
      * @throws InvalidRequestMethodException
      */
-    public function getPaymentTxList(array $parameters = [])
+    public function getPaymentTxList(string $paymentId)
     {
+        if(empty($paymentId)) {
+            throw new InvalidArgumentException('PaymentId is required');
+        }
+
+        $parameters = [
+            'paymentid' => $paymentId
+        ];
+
         return $this->get('payment/list_tx', $parameters);
     }
 
@@ -39,10 +50,19 @@ class Payment extends Resource
      * @param  array  $parameters
      *
      * @return mixed
+     * @throws InvalidArgumentException
      * @throws InvalidRequestMethodException
      */
-    public function getPaymentDetail(array $parameters = [])
+    public function getPaymentDetail(string $paymentId)
     {
+        if(empty($paymentId)) {
+            throw new InvalidArgumentException('PaymentId is required');
+        }
+
+        $parameters = [
+            'paymentid' => $paymentId
+        ];
+
         return $this->get('payment/get', $parameters);
     }
 
@@ -53,9 +73,24 @@ class Payment extends Resource
      *
      * @return mixed
      * @throws InvalidRequestMethodException
+     * @throws MissingArgumentException
      */
     public function createPayment(array $data)
     {
+        $required = ['uoid', 'to', 'value', 'currency'];
+
+        $missing = [];
+
+        foreach($required as $key) {
+            if (!isset($data[$key]) || empty($data[$key])) {
+                $missing[] = $key;
+            }
+        }
+
+        if (!empty($missing)) {
+            throw new MissingArgumentException($missing);
+        }
+
         return $this->post('payment/create', $data);
     }
 }

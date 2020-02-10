@@ -2,6 +2,7 @@
 
 namespace Ezdefi\Tests;
 
+use Ezdefi\Exceptions\InvalidRequestMethodException;
 use Ezdefi\Request;
 use Ezdefi\Tests\Fixtures\RequestFactoryTestStub;
 use Ezdefi\Tests\Fixtures\StreamFactoryTestStub;
@@ -78,6 +79,16 @@ class RequestTest extends TestCase
         $this->assertEquals($expected, $actual);
         $this->assertEquals('application/json', $requestHeaders['Accept'][0]);
         $this->assertEquals('application/json', $requestHeaders['Content-Type'][0]);
+    }
+
+    public function testSendRequestWithWrongMethod()
+    {
+        try {
+            $this->request->sendRequest('WRONG', '/', false, []);
+            $this->fail('Expected exception not thrown');
+        } catch (InvalidRequestMethodException $e) {
+            $this->assertEquals('Wrong request method. Only supports GET, POST, PUT, DELETE', $e->getMessage());
+        }
     }
 
     public function testSendRequestWithBody()
