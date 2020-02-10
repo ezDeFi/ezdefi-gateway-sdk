@@ -15,37 +15,16 @@ class ClientTest extends TestCase
 
     protected function setUp()
     {
-        $this->client = new Client('fake-api-key', 'http://foo.bar');
+        $this->client = new Client('fake-api-key');
+        $this->client->setBaseUrl('http://foo.bar');
     }
 
-    public function testCreateInstanceWithEmptyApiKey()
+    public function testA()
     {
-        try {
-            new Client('', 'http://foo.bar');
-            $this->fail('Expected exception not thrown');
-        } catch (InvalidArgumentException $e) {
-            $this->assertEquals('API key is required', $e->getMessage());
-        }
-    }
-
-    public function testCreateInstanceWithEmptyBaseUrl()
-    {
-        try {
-            new Client('fake-api-key', '');
-            $this->fail('Expected exception not thrown');
-        } catch (InvalidArgumentException $e) {
-            $this->assertEquals('Base URL is required', $e->getMessage());
-        }
-    }
-
-    public function testCreateInstanceWithInvalidBaseUrl()
-    {
-        try {
-            new Client('fake-api-key', 'foo.bar');
-            $this->fail('Expected exception not thrown');
-        } catch (InvalidArgumentException $e) {
-            $this->assertEquals('Base URL is not valid', $e->getMessage());
-        }
+        $client = new Client('781cec94-a4fe-4e1e-985b-e45287a39322');
+        $payments = $client->payment->getPaymentList();
+        var_dump($payments);
+        $this->assertTrue(true);
     }
 
     public function testGetResource()

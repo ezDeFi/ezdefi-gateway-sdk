@@ -16,7 +16,8 @@ class BaseResourceTestCase extends TestCase
 
     protected function setUp()
     {
-        $this->client = new Client('fake-api-key', 'http://foo.bar');
+        $this->client = new Client('fake-api-key');
+        $this->client->setBaseUrl('http://foo.bar');
         $this->request = $this->getMockBuilder(Request::class)->getMock();
     }
 }
