@@ -30,7 +30,6 @@ class Client
      * Client constructor.
      *
      * @param  string  $apiKey
-     * @param  string  $baseUrl
      *
      * @throws InvalidArgumentException
      */
