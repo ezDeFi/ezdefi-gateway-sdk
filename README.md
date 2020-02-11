@@ -1,6 +1,6 @@
-# ezdefi-php
+# ezDeFi PHP Client
 
-Offical PHP SDK for interacting with ezDeFi API.
+Offical ezDeFi PHP SDK. This SDK contains methods for easily interacting with ezDeFi API.
 
 ## Installation
 
@@ -83,7 +83,7 @@ $client->token->getTokenExchanges(1.00, 'usd', ['btc', 'eth']);
 $client->chain->getChainList();
 ```
 
-## Users
+## User
 
 ```php
 /** Get user detail */
